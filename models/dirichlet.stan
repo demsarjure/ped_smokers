@@ -21,4 +21,3 @@ model {
       y[i] ~ dirichlet(alpha_smoker);
   }
 }
-
