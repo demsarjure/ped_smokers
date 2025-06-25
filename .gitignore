@@ -47,3 +47,6 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# ignore the excel file as it might have some sensitive data
+data/data.xlsx
