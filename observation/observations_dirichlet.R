@@ -75,7 +75,6 @@ bootstrap_hdi <- function(y1, y2, n = 1000) {
   hdi(p)
 }
 
-
 # awake
 mean(df_percentage_smoker$awake)
 hdi(df_percentage_smoker$awake)
