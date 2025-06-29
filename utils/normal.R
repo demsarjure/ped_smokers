@@ -71,13 +71,13 @@ compare_two_normal <- function(fit1, label1, fit2, label2) {
   # print results
   cat(paste0(
     "# P(", label1, " > ", label2, ") = ",
-    bigger_prob, " [", round(bigger_hdi[1] * 100, 2),
-    ", ", round(bigger_hdi[2] * 100, 2), "]%\n"
+    bigger_prob, "% [", round(bigger_hdi[1] * 100, 2),
+    "% - ", round(bigger_hdi[2] * 100, 2), "%]\n"
   ))
   cat(paste0(
     "# P(", label1, " < ", label2, ") = ",
-    smaller_prob, " [", round(smaller_hdi[1] * 100, 2),
-    ", ", round(smaller_hdi[2] * 100, 2), "]%\n"
+    smaller_prob, "% [", round(smaller_hdi[1] * 100, 2),
+    "% - ", round(smaller_hdi[2] * 100, 2), "%]\n"
   ))
 
   list(
@@ -131,13 +131,13 @@ compare_normal <- function(fit, constant = 0, label1 = "", label2 = "") {
   # print results
   cat(paste0(
     "# P(", label1, " > ", label2, ") = ",
-    bigger_prob, " [", round(bigger_hdi[1] * 100, 2),
-    ", ", round(bigger_hdi[2] * 100, 2), "]%\n"
+    bigger_prob, "% [", round(bigger_hdi[1] * 100, 2),
+    "% - ", round(bigger_hdi[2] * 100, 2), "%]\n"
   ))
   cat(paste0(
     "# P(", label1, " < ", label2, ") = ",
-    smaller_prob, " [", round(smaller_hdi[1] * 100, 2),
-    ", ", round(smaller_hdi[2] * 100, 2), "]%\n"
+    smaller_prob, "% [", round(smaller_hdi[1] * 100, 2),
+    "% - ", round(smaller_hdi[2] * 100, 2), "%]\n"
   ))
 
   list(

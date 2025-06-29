@@ -25,8 +25,12 @@ subjects = [
 
 # electrodes mapping
 with open(f"{DATA_ROOT}/electrodes.yaml", "r") as f:
-    mapping = yaml.safe_load(f)
-mapping = {str(k): v for k, v in mapping.items()}
+    mapping_data = yaml.safe_load(f)
+if mapping_data is None:
+    raise ValueError(
+        f"Failed to load electrodes from {DATA_ROOT}/electrodes.yaml: file is empty or invalid."
+    )
+mapping = {str(k): v for k, v in mapping_data.items()}
 
 
 def process_subject(subject):
