@@ -1,5 +1,5 @@
 """
-SEF calculation script for EEG data.
+Spectral analysis of EEG data.
 """
 
 import os

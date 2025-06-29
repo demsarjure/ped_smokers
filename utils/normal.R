@@ -3,9 +3,23 @@ library(bayesplot)
 library(cmdstanr)
 library(ggplot2)
 library(ggdist)
-library(mcmcse)
 library(posterior)
 library(tidyverse)
+library(HDInterval)
+
+# bootstrap HDI ----------------------------------------------------------------
+bootstrap_hdi <- function(y1, y2, n = 1000) {
+  n1 <- length(y1)
+  n2 <- length(y2)
+
+  p <- replicate(n, {
+    sample1 <- sample(y1, n1, replace = TRUE)
+    sample2 <- sample(y2, n2, replace = TRUE)
+    mean(sample1 > sample2)
+  })
+
+  hdi(p)
+}
 
 # fit the normal model ---------------------------------------------------------
 fit_normal <- function(y, robust = FALSE) {
@@ -45,30 +59,33 @@ compare_two_normal <- function(fit1, label1, fit2, label2) {
   df_samples_2 <- as_draws_df(fit2$draws())
 
   # compare
-  bigger <- mcse(df_samples_1$mu > df_samples_2$mu)
-  smaller <- mcse(df_samples_1$mu < df_samples_2$mu)
-
-  # extract
+  bigger <- mean(df_samples_1$mu > df_samples_2$mu)
+  smaller <- mean(df_samples_1$mu < df_samples_2$mu)
   bigger_prob <- round(bigger[[1]] * 100, 2)
-  bigger_se <- round(bigger[[2]] * 100, 2)
   smaller_prob <- round(smaller[[1]] * 100, 2)
-  smaller_se <- round(smaller[[2]] * 100, 2)
 
+  # hdi
+  bigger_hdi <- bootstrap_hdi(df_samples_1$mu, df_samples_2$mu)
+  smaller_hdi <- bootstrap_hdi(df_samples_2$mu, df_samples_1$mu)
+
+  # print results
   cat(paste0(
     "# P(", label1, " > ", label2, ") = ",
-    bigger_prob, " ± ", bigger_se, "%\n"
+    bigger_prob, " [", round(bigger_hdi[1] * 100, 2),
+    ", ", round(bigger_hdi[2] * 100, 2), "]%\n"
   ))
   cat(paste0(
     "# P(", label1, " < ", label2, ") = ",
-    smaller_prob, " ± ", smaller_se, "%\n"
+    smaller_prob, " [", round(smaller_hdi[1] * 100, 2),
+    ", ", round(smaller_hdi[2] * 100, 2), "]%\n"
   ))
 
-  return(list(
+  list(
     bigger_prob = bigger_prob,
-    bigger_se = bigger_se,
+    bigger_hdi = bigger_hdi,
     smaller_prob = smaller_prob,
-    smaller_se = smaller_se
-  ))
+    smaller_hdi = smaller_hdi
+  )
 }
 
 # plot comparison between two normal fits --------------------------------------
@@ -88,7 +105,7 @@ plot_comparison_two_normal <- function(fit1, label1, fit2, label2) {
     xlab("Mean") +
     ylab("")
 
-  return(p)
+  p
 }
 
 # compare a normal fit with a constant -----------------------------------------
@@ -97,14 +114,14 @@ compare_normal <- function(fit, constant = 0, label1 = "", label2 = "") {
   df_samples <- as_draws_df(fit$draws())
 
   # compare
-  bigger <- mcse(df_samples$mu > constant)
-  smaller <- mcse(df_samples$mu < constant)
-
-  # extract
+  bigger <- mean(df_samples$mu > constant)
+  smaller <- mean(df_samples$mu < constant)
   bigger_prob <- round(bigger[[1]] * 100, 2)
-  bigger_se <- round(bigger[[2]] * 100, 2)
   smaller_prob <- round(smaller[[1]] * 100, 2)
-  smaller_se <- round(smaller[[2]] * 100, 2)
+
+  # hdi
+  bigger_hdi <- bootstrap_hdi(df_samples$mu, constant)
+  smaller_hdi <- bootstrap_hdi(constant, df_samples$mu)
 
   # set label
   if (label2 == "") {
@@ -114,19 +131,21 @@ compare_normal <- function(fit, constant = 0, label1 = "", label2 = "") {
   # print results
   cat(paste0(
     "# P(", label1, " > ", label2, ") = ",
-    bigger_prob, " ± ", bigger_se, "%\n"
+    bigger_prob, " [", round(bigger_hdi[1] * 100, 2),
+    ", ", round(bigger_hdi[2] * 100, 2), "]%\n"
   ))
   cat(paste0(
     "# P(", label1, " < ", label2, ") = ",
-    smaller_prob, " ± ", smaller_se, "%\n"
+    smaller_prob, " [", round(smaller_hdi[1] * 100, 2),
+    ", ", round(smaller_hdi[2] * 100, 2), "]%\n"
   ))
 
-  return(list(
+  list(
     bigger_prob = bigger_prob,
-    bigger_se = bigger_se,
+    bigger_hdi = bigger_hdi,
     smaller_prob = smaller_prob,
-    smaller_se = smaller_se
-  ))
+    smaller_hdi = smaller_hdi
+  )
 }
 
 # plot comparison between a normal fit and a constant --------------------------

@@ -2,7 +2,6 @@
 library(bayesplot)
 library(cmdstanr)
 library(ggplot2)
-library(mcmcse)
 library(posterior)
 library(tidyverse)
 library(HDInterval)
