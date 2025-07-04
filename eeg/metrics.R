@@ -55,7 +55,6 @@ ggsave(
   bg = "white"
 )
 
-
 # cas_l delta ------------------------------------------------------------------
 fit_cas_l_delta_s <- fit_normal(df_smokers_delta$cas_l, robust = TRUE)
 fit_cas_l_delta_ns <- fit_normal(df_non_smokers_delta$cas_l, robust = TRUE)
