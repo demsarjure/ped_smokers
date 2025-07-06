@@ -4,7 +4,7 @@ library(tidyverse)
 source("./utils/normal.R")
 
 # load data --------------------------------------------------------------------
-df_metrics <- read_csv(paste0("./data/connectome_metrics.csv"))
+df_metrics <- read_csv("./data/connectome_metrics.csv")
 
 # pairs ------------------------------------------------------------------------
 df_smokers_delta <- df_metrics %>%

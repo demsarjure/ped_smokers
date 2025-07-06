@@ -56,6 +56,9 @@ def process_subject(subject):
     raw.filter(l_freq=0.1, h_freq=40)
     raw_for_ica = raw.copy().filter(l_freq=1.0, h_freq=None)
 
+    # downsample
+    raw.resample(250)
+
     # re-reference to average reference
     raw.set_eeg_reference("average", projection=False)
 
@@ -89,8 +92,6 @@ def process_subject(subject):
     clean_file = f"{CLEAN_ROOT}/{subject}_clean.fif"
     clean.save(clean_file, overwrite=True)
 
-
-subjects = ["S05", "S08"]
 
 # process all subjects in parallel
 if __name__ == "__main__":
