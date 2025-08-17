@@ -22,7 +22,7 @@ results <- compare_two_normal(
 # en
 plot_comparison_two_normal(
   fit1 = fit_sw_s, label1 = "Smoker", fit2 = fit_sw_ns, label2 = "Non-smoker"
-) + ggtitle("Quiet sleep percentage") + xlab("Duration (hours)")
+) + ggtitle("Quiet sleep percentage") + xlab("")
 ggsave(
   paste0("./figs/ta.png"),
   width = 1080,
@@ -35,7 +35,7 @@ ggsave(
 # si
 plot_comparison_two_normal(
   fit1 = fit_sw_s, label1 = "Kadilke", fit2 = fit_sw_ns, label2 = "Nekadilke"
-) + ggtitle("Delež mirnega spanja") + xlab("Delež")
+) + ggtitle("Delež mirnega spanja") + xlab("")
 ggsave(
   paste0("./figs/ta_si.png"),
   width = 1080,
