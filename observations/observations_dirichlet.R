@@ -129,9 +129,49 @@ df_non_smoker_summary <- df_percentage_non_smoker %>%
 
 df_summary <- bind_rows(df_smoker_summary, df_non_smoker_summary) %>%
   select(smoker, state, mean, sd)
-
+df_summary <- df_summary %>%
+  mutate(
+    state = case_when(
+      state == "awake" ~ "Awake",
+      state == "drowsy" ~ "Drowsy",
+      state == "rem" ~ "REM",
+      state == "peaceful_sleep" ~ "Peaceful Sleep"
+    ),
+    smoker = case_when(
+      smoker == "smoker" ~ "Smoker",
+      smoker == "non_smoker" ~ "Non-smoker"
+    )
+  )
 df_summary
 
+# en
+ggplot(df_summary, aes(x = smoker, y = mean)) +
+  geom_col(width = 0.75, fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
+    width = 0.2, size = 0.5, color = "grey25"
+  ) +
+  facet_grid(~state, scales = "free_x", space = "free_x") +
+  labs(
+    y = "Percentage in a sleep state",
+    x = "",
+    title = ""
+  ) +
+  theme_minimal() +
+  ylim(0, 1) +
+  theme(
+    legend.position = "none",
+    panel.spacing.x = unit(3, "lines")
+  )
+ggsave(
+  paste0("./figs/observation_states.png"),
+  width = 2160,
+  height = 1080,
+  dpi = 200,
+  units = "px",
+  bg = "white"
+)
+
+# si
 # awake -> budnost
 # drowsy -> dremavost
 # rem -> REM faza
@@ -149,6 +189,7 @@ df_summary_si <- df_summary %>%
       smoker == "non_smoker" ~ "Nekadilka"
     )
   )
+df_summary_si
 
 ggplot(df_summary_si, aes(x = smoker, y = mean)) +
   geom_col(width = 0.75, fill = "skyblue") +
@@ -167,7 +208,6 @@ ggplot(df_summary_si, aes(x = smoker, y = mean)) +
     legend.position = "none",
     panel.spacing.x = unit(3, "lines")
   )
-
 ggsave(
   paste0("./figs/observation_states_si.png"),
   width = 2160,
