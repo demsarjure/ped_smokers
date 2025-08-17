@@ -169,7 +169,7 @@ ggplot(df_summary_si, aes(x = smoker, y = mean)) +
   )
 
 ggsave(
-  paste0("./figs/observation_states.png"),
+  paste0("./figs/observation_states_si.png"),
   width = 2160,
   height = 1080,
   dpi = 200,

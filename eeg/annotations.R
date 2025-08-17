@@ -22,7 +22,7 @@ df_plot <- df %>%
   mutate(time_seconds = time_seconds - min(time_seconds)) %>%
   ungroup()
 
-df_plot$group <- ifelse(startsWith(df_plot$id, "S"), "Kadilka", "Nekadilka")
+df_plot$group <- ifelse(startsWith(df_plot$id, "S"), "Smoker", "Non-smoker")
 
 # Create annotation areas for background coloring
 annotation_areas <- df_plot %>%
@@ -40,6 +40,44 @@ annotation_areas <- df_plot %>%
   )
 
 # create plot ------------------------------------------------------------------
+# en
+ggplot(df_plot, aes(x = time_minutes, y = eeg)) +
+  # Add background rectangles for annotation areas
+  geom_rect(
+    data = annotation_areas,
+    aes(xmin = xmin, xmax = xmax, ymin = -Inf, ymax = Inf),
+    fill = "lightblue", alpha = 0.3, inherit.aes = FALSE
+  ) +
+  # Add EEG signal line
+  geom_line(color = "black", size = 0.5) +
+  # Facet by ID
+  facet_wrap(~group, scales = "free_y", ncol = 1) +
+  # Labels and theme
+  labs(
+    x = "Time (min)",
+    y = "EEG (μV)",
+    title = "EEG with annotated TA"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+
+ggsave(
+  paste0("./figs/annotations.png"),
+  width = 1080,
+  height = 540,
+  dpi = 100,
+  units = "px",
+  bg = "white"
+)
+
+# si
+# translate group in df_plot and annotation_areas to Kadilka Nekadilka
+df_plot$group <- ifelse(df_plot$group == "Smoker", "Kadilka", "Nekadilka")
+annotation_areas$group <- ifelse(annotation_areas$group == "Smoker", "Kadilka", "Nekadilka")
+
 ggplot(df_plot, aes(x = time_minutes, y = eeg)) +
   # Add background rectangles for annotation areas
   geom_rect(
@@ -64,7 +102,7 @@ ggplot(df_plot, aes(x = time_minutes, y = eeg)) +
   )
 
 ggsave(
-  paste0("./figs/annotations.png"),
+  paste0("./figs/annotations_si.png"),
   width = 1080,
   height = 540,
   dpi = 100,
