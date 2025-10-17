@@ -163,6 +163,14 @@ ggplot(df_summary, aes(x = smoker, y = mean)) +
     panel.spacing.x = unit(3, "lines")
   )
 ggsave(
+  paste0("./figs/observation_states.pdf"),
+  width = 2160,
+  height = 1080,
+  dpi = 200,
+  units = "px",
+  bg = "white"
+)
+ggsave(
   paste0("./figs/observation_states.png"),
   width = 2160,
   height = 1080,

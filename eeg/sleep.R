@@ -24,6 +24,14 @@ plot_comparison_two_normal(
   fit1 = fit_sw_s, label1 = "Smoker", fit2 = fit_sw_ns, label2 = "Non-smoker"
 ) + ggtitle("Quiet sleep percentage") + xlab("")
 ggsave(
+  paste0("./figs/ta.pdf"),
+  width = 1080,
+  height = 540,
+  dpi = 100,
+  units = "px",
+  bg = "white"
+)
+ggsave(
   paste0("./figs/ta.png"),
   width = 1080,
   height = 540,

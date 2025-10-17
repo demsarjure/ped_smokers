@@ -65,6 +65,15 @@ ggplot(df_plot, aes(x = time_minutes, y = eeg)) +
   )
 
 ggsave(
+  paste0("./figs/annotations.pdf"),
+  width = 1080,
+  height = 540,
+  dpi = 100,
+  units = "px",
+  bg = "white"
+)
+
+ggsave(
   paste0("./figs/annotations.png"),
   width = 1080,
   height = 540,

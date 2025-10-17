@@ -47,6 +47,14 @@ plot_comparison_two_normal(
   fit1 = fit_cas_r_delta_s, label1 = "Smoker", fit2 = fit_cas_r_delta_ns, label2 = "Non-smoker"
 ) + ggtitle("Functional connectivity, right hemisphere, delta band [0.5 - 4 Hz]") + xlab("Average value")
 ggsave(
+  paste0("./figs/cas_r_delta.pdf"),
+  width = 1080,
+  height = 540,
+  dpi = 100,
+  units = "px",
+  bg = "white"
+)
+ggsave(
   paste0("./figs/cas_r_delta.png"),
   width = 1080,
   height = 540,
@@ -114,6 +122,14 @@ plot_comparison_two_normal(
   fit1 = fit_ge_alpha_s, label1 = "Smoker", fit2 = fit_ge_alpha_ns, label2 = "Non-smoker"
 ) + ggtitle("Global efficiency, alpha band [8 - 13 Hz]") + xlab("Average value")
 ggsave(
+  paste0("./figs/ge_alpha.pdf"),
+  width = 1080,
+  height = 540,
+  dpi = 100,
+  units = "px",
+  bg = "white"
+)
+ggsave(
   paste0("./figs/ge_alpha.png"),
   width = 1080,
   height = 540,
@@ -152,6 +168,14 @@ results <- compare_two_normal(
 plot_comparison_two_normal(
   fit1 = fit_cas_r_alpha_s, label1 = "Smoker", fit2 = fit_cas_r_alpha_ns, label2 = "Non-smoker"
 ) + ggtitle("Functional connectivity, right hemisphere, alpha band [8 - 13 Hz]") + xlab("Average value")
+ggsave(
+  paste0("./figs/cas_r_alpha.pdf"),
+  width = 1080,
+  height = 540,
+  dpi = 100,
+  units = "px",
+  bg = "white"
+)
 ggsave(
   paste0("./figs/cas_r_alpha.png"),
   width = 1080,

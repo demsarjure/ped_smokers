@@ -27,6 +27,15 @@ plot_comparison_two_normal(
 ) + ggtitle("SEF 90") + xlab("Average SEF 90 Value [Hz]")
 
 ggsave(
+  paste0("./figs/eeg_sef.pdf"),
+  width = 1080,
+  height = 540,
+  dpi = 100,
+  units = "px",
+  bg = "white"
+)
+
+ggsave(
   paste0("./figs/eeg_sef.png"),
   width = 1080,
   height = 540,
@@ -106,6 +115,14 @@ p_beta_si <- plot_comparison_two_normal(
 plot_grid(
   p_delta, p_theta, p_alpha, p_beta,
   ncol = 2, nrow = 2, scale = 0.9
+)
+ggsave(
+  paste0("./figs/eeg_bands.pdf"),
+  width = 1080,
+  height = 540,
+  dpi = 100,
+  units = "px",
+  bg = "white"
 )
 ggsave(
   paste0("./figs/eeg_bands.png"),
