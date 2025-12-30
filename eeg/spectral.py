@@ -1,5 +1,9 @@
 """
 Spectral analysis of EEG data.
+
+This module provides functions to compute power spectral density (PSD) using Welch's method,
+spectral edge frequency (SEF), and relative power in standard EEG frequency bands.
+Typical EEG sampling rates (e.g., 250-1000 Hz) and analysis parameters are considered.
 """
 
 import os
@@ -8,12 +12,14 @@ import numpy as np
 from joblib import Parallel, delayed
 import pandas as pd
 
+# Threshold for spectral edge frequency (SEF) calculation (0.9 = 90% of total power).
 THRESHOLD = 0.9
 
 # consts
 CLEAN_ROOT = "/mnt/d/work/eeg_smokers_data/clean"
 DATA_ROOT = "/home/jure/work/ped_smokers/data"
 
+# Standard EEG frequency band definitions (in Hz).
 BANDS = {
     "delta": (0.5, 4),
     "theta": (4, 8),
@@ -30,14 +36,43 @@ subjects = [
 
 
 def spectral_analysis(subject):
+    """
+    Compute spectral metrics for a single subject's EEG data.
+
+    Parameters
+    ----------
+    subject : str
+        Subject identifier used to locate the preprocessed FIF file.
+
+    Returns
+    -------
+    sef_mean : float
+        Mean spectral edge frequency across channels (frequency below which 90% of total power resides).
+    relative_power : dict
+        Relative power per EEG band, normalized by total power (0.5-100 Hz). Keys are band names.
+
+    Notes
+    -----
+    - The PSD is estimated using Welch's method with a default Hann window and 2048-point FFT.
+      Larger `n_fft` yields finer frequency resolution, critical for distinguishing alpha (8-13 Hz)
+      and beta (13-30 Hz) bands, at the cost of reduced time resolution.
+    - The Hann window reduces spectral leakage but widens the main lobe, which may affect
+      detection of narrowband oscillations.
+    - Detrending is applied by default in MNE's `compute_psd` to remove slow drifts.
+    - Relative power is computed as the proportion of total power within each band,
+      which helps control for inter‑subject differences in overall signal amplitude.
+    """
     fif_file = f"{CLEAN_ROOT}/{subject}_clean.fif"
 
     eeg_data = mne.io.read_raw_fif(fif_file, preload=True)
 
+    # Compute PSD using Welch's method with Hann window and 2048-point FFT.
+    # Frequency resolution = sampling_rate / n_fft (e.g., 0.24 Hz at 500 Hz).
     psd = eeg_data.compute_psd(method="welch", fmin=0.5, fmax=100, n_fft=2048)
     psd_data, freqs = psd.get_data(return_freqs=True)
 
-    # sef
+    # Compute spectral edge frequency (SEF) per channel:
+    # frequency below which 90% of total power resides.
     sef = []
     for ch_psd in psd_data:
         cumulative_power = np.cumsum(ch_psd)
@@ -47,7 +82,8 @@ def spectral_analysis(subject):
 
     sef_mean = np.mean(sef)
 
-    # band max power
+    # Compute relative power per band:
+    # proportion of total power within each frequency range.
     total_power = np.trapz(psd_data, freqs, axis=1)
     relative_power = {}
 
